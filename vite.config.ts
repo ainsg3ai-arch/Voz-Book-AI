@@ -8,5 +8,9 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'esbuild',
+    emptyOutDir: true,
+  },
+  server: {
+    host: true
   }
 })
