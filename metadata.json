@@ -1,0 +1,5 @@
+{
+  "name": "VozBook AI",
+  "description": "Convert text documents into natural sounding audiobooks using AI.",
+  "requestFramePermissions": []
+}
