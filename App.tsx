@@ -24,7 +24,8 @@ const INITIAL_BOOKS: Book[] = [
     progress: 45,
     fileType: 'pdf',
     category: 'audiobook',
-    dateAdded: new Date()
+    dateAdded: new Date(),
+    textContent: "Quando eu tinha seis anos, vi uma vez uma imagem magnífica num livro sobre a Floresta Virgem que se chamava \"Histórias Vividas\".\nRepresentava uma jiboia a engolir uma fera.\nEis a cópia do desenho.\nNo livro dizia: \"As jiboias engolem a sua presa inteira, sem a mastigar. Depois não se podem mexer e dormem durante os seis meses da digestão.\"\nRefleti muito então sobre as aventuras da selva e, por minha vez, consegui, com um lápis de cor, traçar o meu primeiro desenho."
   },
   {
     id: '2',
@@ -84,6 +85,13 @@ export default function App() {
     setCurrentView(ViewState.PLAYER);
   };
 
+  const handlePodcastCreated = (newBook: Book) => {
+    setBooks([newBook, ...books]);
+    setCurrentBook(newBook);
+    setIsPlaying(true);
+    setCurrentView(ViewState.PLAYER);
+  }
+
   const handlePlayBook = (book: Book) => {
     if (currentBook?.id === book.id) {
         setIsPlaying(!isPlaying);
@@ -118,7 +126,7 @@ export default function App() {
       case ViewState.BIBLE_MODE:
         return <BibleModeView onBack={() => setCurrentView(ViewState.HOME)} onPlayBook={(book) => { handlePlayBook(book); setCurrentView(ViewState.PLAYER); }} />;
       case ViewState.PODCAST_CREATOR:
-         return <PodcastCreatorView onBack={() => setCurrentView(ViewState.HOME)} />;
+         return <PodcastCreatorView onBack={() => setCurrentView(ViewState.HOME)} onComplete={handlePodcastCreated} />;
       case 'PROFILE':
          return <ProfileView onNavigate={handleNavigate} />;
       default:

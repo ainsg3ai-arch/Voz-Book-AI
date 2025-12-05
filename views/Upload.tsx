@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeft, FileText, UploadCloud, X, CheckCircle2, Camera, Link as LinkIcon, Layers } from 'lucide-react';
+import { ArrowLeft, FileText, UploadCloud, X, CheckCircle2, Camera, Link as LinkIcon, Layers, ScanLine } from 'lucide-react';
 import { ViewState, FileUploadState } from '../types';
 
 interface UploadProps {
@@ -57,6 +57,17 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
     }));
   };
 
+  const handleLinkInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+      // Simulate link fetch
+      if(e.target.value.length > 10) {
+           setFileState(prev => ({
+              ...prev,
+              files: [new File([""], "artigo-web.html")],
+              previewText: `Extraindo conteúdo de: ${e.target.value}\n\nO VozBook AI removeu anúncios e menus, mantendo apenas o texto principal para leitura.`
+           }));
+      }
+  }
+
   const removeFile = (index: number) => {
     const updated = fileState.files.filter((_, i) => i !== index);
     setFileState(prev => ({
@@ -91,48 +102,73 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
 
       <div className="flex-1 p-6 flex flex-col gap-6 overflow-y-auto">
         {fileState.files.length === 0 ? (
-          <div 
-            className={`flex-1 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center gap-4 transition-colors ${dragActive ? 'border-neon bg-neon/10' : 'border-white/20 bg-white/5'}`}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-          >
-            <div className="w-20 h-20 bg-petrol-light rounded-full flex items-center justify-center mb-2 relative">
-              {activeTab === 'camera' ? <Camera size={40} className="text-neon" /> : activeTab === 'link' ? <LinkIcon size={40} className="text-neon" /> : <UploadCloud size={40} className="text-neon" />}
-            </div>
-            <div className="text-center px-8">
-              <p className="font-bold text-white text-lg mb-2">
-                 {activeTab === 'camera' ? 'Tirar Foto ou Galeria' : activeTab === 'link' ? 'Colar URL do Artigo' : 'Arraste ou Selecione'}
-              </p>
-              <p className="text-gray-400 text-sm">
-                {activeTab === 'camera' ? 'Detecta texto em imagens' : 'PDF, DOCX, TXT, EPUB'}
-              </p>
-            </div>
-
-            <input 
-              ref={inputRef}
-              type="file" 
-              className="hidden" 
-              multiple
-              onChange={handleChange}
-              accept={activeTab === 'camera' ? "image/*" : ".pdf,.docx,.txt,.epub"}
-            />
-            
-            <div className="flex flex-col gap-3 w-full max-w-xs">
-                 <button 
-                  onClick={() => inputRef.current?.click()}
-                  className="w-full px-6 py-3 bg-neon hover:bg-neon-hover text-white font-semibold rounded-xl text-sm transition-colors"
+          <>
+            {/* FILE UPLOAD MODE */}
+            {activeTab === 'file' && (
+                <div 
+                    className={`flex-1 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center gap-4 transition-colors ${dragActive ? 'border-neon bg-neon/10' : 'border-white/20 bg-white/5'}`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
                 >
-                  {activeTab === 'camera' ? 'Abrir Câmera' : 'Selecionar Arquivos'}
-                </button>
-                {activeTab === 'file' && (
-                     <button className="w-full px-6 py-3 bg-white/5 hover:bg-white/10 text-gray-300 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
-                        <UploadCloud size={16} /> Importar do Google Drive
-                     </button>
-                )}
-            </div>
-          </div>
+                    <div className="w-20 h-20 bg-petrol-light rounded-full flex items-center justify-center mb-2">
+                         <UploadCloud size={40} className="text-neon" />
+                    </div>
+                    <div className="text-center px-8">
+                        <p className="font-bold text-white text-lg mb-2">Arraste e solte</p>
+                        <p className="text-gray-400 text-sm">PDF, DOCX, TXT, EPUB</p>
+                    </div>
+                    <input ref={inputRef} type="file" className="hidden" multiple onChange={handleChange} accept=".pdf,.docx,.txt,.epub" />
+                    <div className="flex flex-col gap-3 w-full max-w-xs mt-4">
+                        <button onClick={() => inputRef.current?.click()} className="w-full px-6 py-3 bg-neon hover:bg-neon-hover text-white font-semibold rounded-xl text-sm transition-colors">
+                             Selecionar Arquivos
+                        </button>
+                        <button className="w-full px-6 py-3 bg-white/5 hover:bg-white/10 text-gray-300 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                             <UploadCloud size={16} /> Importar do Drive
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* CAMERA MODE */}
+            {activeTab === 'camera' && (
+                <div className="flex-1 bg-black rounded-3xl relative overflow-hidden flex flex-col items-center justify-center border border-white/20">
+                     <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50 z-10"></div>
+                     {/* Fake Viewfinder */}
+                     <div className="absolute inset-4 border-2 border-white/30 rounded-2xl z-0">
+                         <ScanLine className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/50 animate-pulse" size={64} />
+                     </div>
+                     <p className="relative z-20 text-white font-medium mb-8 bg-black/50 px-3 py-1 rounded-full">Posicione o texto aqui</p>
+                     
+                     <div className="relative z-20 flex gap-6 items-center">
+                         <button className="p-3 bg-white/10 rounded-full text-white"><FileText size={24}/></button>
+                         <button onClick={() => handleFiles([new File(["OCR Content"], "foto-scan.jpg")])} className="w-16 h-16 bg-white rounded-full border-4 border-gray-300 flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+                             <div className="w-14 h-14 bg-white rounded-full border-2 border-black"></div>
+                         </button>
+                         <button className="p-3 bg-white/10 rounded-full text-white"><X size={24}/></button>
+                     </div>
+                </div>
+            )}
+
+            {/* LINK MODE */}
+            {activeTab === 'link' && (
+                <div className="flex-1 flex flex-col items-center pt-10">
+                    <div className="w-full bg-white/5 p-6 rounded-3xl border border-white/10">
+                         <label className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2 block">Cole o link do artigo</label>
+                         <div className="flex gap-2">
+                             <input 
+                                type="text" 
+                                placeholder="https://..." 
+                                onChange={handleLinkInput}
+                                className="flex-1 bg-black/20 border border-white/10 rounded-xl p-4 text-white focus:border-neon focus:outline-none"
+                             />
+                         </div>
+                         <p className="text-xs text-gray-500 mt-4">O VozBook irá extrair automaticamente o texto principal e ignorar menus e propagandas.</p>
+                    </div>
+                </div>
+            )}
+          </>
         ) : (
           <div className="flex-1 flex flex-col animate-in fade-in zoom-in-95 duration-300">
             {/* File List for Batch */}
