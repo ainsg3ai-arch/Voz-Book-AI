@@ -2,28 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Scrollbar Styles */
+@layer base {
+  body {
+    @apply bg-[#020607]; /* Deep dark background for desktop context */
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: white;
+    overflow: hidden; /* Prevent body scroll, handle inside layout */
+  }
+}
+
 @layer utilities {
+  /* Elegant Scrollbar */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
   }
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: #0a3642; 
+    background: transparent; 
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #27A0FF; 
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 10px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #5cb8ff; 
+    background: rgba(255, 255, 255, 0.2); 
   }
 
-  /* Utility to hide scrollbar but keep functionality */
+  /* Hide Scrollbar */
   .scrollbar-hide::-webkit-scrollbar {
       display: none;
   }
   .scrollbar-hide {
       -ms-overflow-style: none;
       scrollbar-width: none;
+  }
+  
+  /* Glassmorphism Panels */
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-md border border-white/5 shadow-xl;
+  }
+  
+  /* Standardized Inputs */
+  .glass-input {
+    @apply bg-black/20 border border-white/10 focus:border-neon/50 focus:bg-black/30 transition-all outline-none placeholder:text-gray-500 text-white rounded-xl;
+  }
+
+  /* Gradient Mask for Text */
+  .mask-image-gradient {
+    mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  }
+
+  /* Animation Utilities */
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }

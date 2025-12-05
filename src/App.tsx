@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Layout } from './components/Layout';
 import { Home } from './views/Home';
 import { UploadView } from './views/Upload';
@@ -69,12 +69,12 @@ export default function App() {
   };
 
   // Flow Handlers
-  const handleFileSelected = (files: File[], isOCR: boolean) => {
+  const handleFileSelected = (files: File[], _isOCR: boolean) => {
     setTempFiles(files);
     setCurrentView(ViewState.VOICE_SETTINGS);
   };
 
-  const handleVoiceSelected = (config: VoiceConfig) => {
+  const handleVoiceSelected = (_config: VoiceConfig) => {
     setCurrentView(ViewState.CONVERSION);
   };
 

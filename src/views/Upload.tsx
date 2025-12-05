@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, FileText, UploadCloud, X, CheckCircle2, Camera, Link as LinkIcon, Layers, ScanLine } from 'lucide-react';
-import { ViewState, FileUploadState } from '../types';
+import { FileUploadState } from '../types';
 
 interface UploadProps {
   onBack: () => void;
@@ -80,7 +80,7 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
 
   return (
     <div className="flex flex-col h-full bg-petrol animate-in slide-in-from-right duration-300">
-      <div className="px-6 py-4 flex items-center gap-4 border-b border-white/5">
+      <div className="px-6 py-4 flex items-center gap-4 border-b border-white/5 bg-petrol/50 backdrop-blur-md sticky top-0 z-10">
         <button onClick={onBack} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors">
           <ArrowLeft size={24} className="text-white" />
         </button>
@@ -89,42 +89,42 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
 
       {/* Tabs */}
       <div className="px-6 pt-4 flex gap-2">
-         <button onClick={() => setActiveTab('file')} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${activeTab === 'file' ? 'bg-neon text-white' : 'bg-white/5 text-gray-400'}`}>
+         <button onClick={() => setActiveTab('file')} className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${activeTab === 'file' ? 'bg-neon text-white shadow-lg shadow-neon/20' : 'bg-white/5 text-gray-400 hover:text-white'}`}>
             <FileText size={16} /> Arquivo
          </button>
-         <button onClick={() => setActiveTab('camera')} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${activeTab === 'camera' ? 'bg-neon text-white' : 'bg-white/5 text-gray-400'}`}>
+         <button onClick={() => setActiveTab('camera')} className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${activeTab === 'camera' ? 'bg-neon text-white shadow-lg shadow-neon/20' : 'bg-white/5 text-gray-400 hover:text-white'}`}>
             <Camera size={16} /> OCR
          </button>
-         <button onClick={() => setActiveTab('link')} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${activeTab === 'link' ? 'bg-neon text-white' : 'bg-white/5 text-gray-400'}`}>
+         <button onClick={() => setActiveTab('link')} className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${activeTab === 'link' ? 'bg-neon text-white shadow-lg shadow-neon/20' : 'bg-white/5 text-gray-400 hover:text-white'}`}>
             <LinkIcon size={16} /> Link
          </button>
       </div>
 
-      <div className="flex-1 p-6 flex flex-col gap-6 overflow-y-auto">
+      <div className="flex-1 p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
         {fileState.files.length === 0 ? (
           <>
             {/* FILE UPLOAD MODE */}
             {activeTab === 'file' && (
                 <div 
-                    className={`flex-1 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center gap-4 transition-colors ${dragActive ? 'border-neon bg-neon/10' : 'border-white/20 bg-white/5'}`}
+                    className={`flex-1 border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center gap-6 transition-all duration-300 ${dragActive ? 'border-neon bg-neon/10' : 'border-white/10 bg-white/5'}`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
                     onDrop={handleDrop}
                 >
-                    <div className="w-20 h-20 bg-petrol-light rounded-full flex items-center justify-center mb-2">
-                         <UploadCloud size={40} className="text-neon" />
+                    <div className="w-24 h-24 bg-gradient-to-br from-petrol-light to-petrol-dark rounded-full flex items-center justify-center shadow-2xl border border-white/5">
+                         <UploadCloud size={48} className="text-neon drop-shadow-lg" />
                     </div>
                     <div className="text-center px-8">
-                        <p className="font-bold text-white text-lg mb-2">Arraste e solte</p>
+                        <p className="font-bold text-white text-xl mb-2">Arraste e solte</p>
                         <p className="text-gray-400 text-sm">PDF, DOCX, TXT, EPUB</p>
                     </div>
                     <input ref={inputRef} type="file" className="hidden" multiple onChange={handleChange} accept=".pdf,.docx,.txt,.epub" />
                     <div className="flex flex-col gap-3 w-full max-w-xs mt-4">
-                        <button onClick={() => inputRef.current?.click()} className="w-full px-6 py-3 bg-neon hover:bg-neon-hover text-white font-semibold rounded-xl text-sm transition-colors">
+                        <button onClick={() => inputRef.current?.click()} className="w-full px-6 py-4 bg-neon hover:bg-neon-hover text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-neon/20 active:scale-[0.98]">
                              Selecionar Arquivos
                         </button>
-                        <button className="w-full px-6 py-3 bg-white/5 hover:bg-white/10 text-gray-300 font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        <button className="w-full px-6 py-4 bg-white/5 hover:bg-white/10 text-gray-300 font-bold rounded-2xl text-sm transition-colors flex items-center justify-center gap-2">
                              <UploadCloud size={16} /> Importar do Drive
                         </button>
                     </div>
@@ -133,20 +133,20 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
 
             {/* CAMERA MODE */}
             {activeTab === 'camera' && (
-                <div className="flex-1 bg-black rounded-3xl relative overflow-hidden flex flex-col items-center justify-center border border-white/20">
+                <div className="flex-1 bg-black rounded-[2rem] relative overflow-hidden flex flex-col items-center justify-center border border-white/20 shadow-2xl">
                      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50 z-10"></div>
                      {/* Fake Viewfinder */}
                      <div className="absolute inset-4 border-2 border-white/30 rounded-2xl z-0">
-                         <ScanLine className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/50 animate-pulse" size={64} />
+                         <ScanLine className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/50 animate-pulse" size={80} strokeWidth={1} />
                      </div>
-                     <p className="relative z-20 text-white font-medium mb-8 bg-black/50 px-3 py-1 rounded-full">Posicione o texto aqui</p>
+                     <p className="relative z-20 text-white font-medium mb-12 bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full text-sm border border-white/10">Posicione o texto aqui</p>
                      
-                     <div className="relative z-20 flex gap-6 items-center">
-                         <button className="p-3 bg-white/10 rounded-full text-white"><FileText size={24}/></button>
-                         <button onClick={() => handleFiles([new File(["OCR Content"], "foto-scan.jpg")])} className="w-16 h-16 bg-white rounded-full border-4 border-gray-300 flex items-center justify-center shadow-lg active:scale-95 transition-transform">
-                             <div className="w-14 h-14 bg-white rounded-full border-2 border-black"></div>
+                     <div className="relative z-20 flex gap-8 items-center">
+                         <button className="p-4 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors backdrop-blur-md"><FileText size={24}/></button>
+                         <button onClick={() => handleFiles([new File(["OCR Content"], "foto-scan.jpg")])} className="w-20 h-20 bg-white rounded-full border-4 border-gray-400 flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+                             <div className="w-16 h-16 bg-white rounded-full border-2 border-black"></div>
                          </button>
-                         <button className="p-3 bg-white/10 rounded-full text-white"><X size={24}/></button>
+                         <button className="p-4 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors backdrop-blur-md"><X size={24}/></button>
                      </div>
                 </div>
             )}
@@ -154,17 +154,22 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
             {/* LINK MODE */}
             {activeTab === 'link' && (
                 <div className="flex-1 flex flex-col items-center pt-10">
-                    <div className="w-full bg-white/5 p-6 rounded-3xl border border-white/10">
-                         <label className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2 block">Cole o link do artigo</label>
+                    <div className="w-full glass-panel p-8 rounded-[2rem]">
+                         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 block">Cole o link do artigo</label>
                          <div className="flex gap-2">
                              <input 
                                 type="text" 
                                 placeholder="https://..." 
                                 onChange={handleLinkInput}
-                                className="flex-1 bg-black/20 border border-white/10 rounded-xl p-4 text-white focus:border-neon focus:outline-none"
+                                className="w-full h-14 glass-input px-4 text-white focus:border-neon transition-all"
                              />
                          </div>
-                         <p className="text-xs text-gray-500 mt-4">O VozBook irá extrair automaticamente o texto principal e ignorar menus e propagandas.</p>
+                         <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/5">
+                            <p className="text-xs text-gray-400 leading-relaxed">
+                                <strong className="text-white block mb-1">IA de Leitura Web:</strong>
+                                O VozBook irá extrair automaticamente o texto principal, ignorando menus, rodapés e propagandas para uma leitura limpa.
+                            </p>
+                         </div>
                     </div>
                 </div>
             )}
@@ -172,28 +177,28 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
         ) : (
           <div className="flex-1 flex flex-col animate-in fade-in zoom-in-95 duration-300">
             {/* File List for Batch */}
-            <div className="space-y-3 mb-6">
+            <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center text-sm">
                     <span className="text-white font-bold flex items-center gap-2">
-                        <Layers size={16} className="text-neon" />
+                        <Layers size={18} className="text-neon" />
                         {fileState.files.length} Arquivo(s) selecionado(s)
                     </span>
-                    <button onClick={() => inputRef.current?.click()} className="text-neon hover:text-white transition-colors">
+                    <button onClick={() => inputRef.current?.click()} className="text-neon hover:text-white transition-colors font-medium text-xs uppercase tracking-wide">
                         + Adicionar
                     </button>
                 </div>
                 
-                <div className="max-h-40 overflow-y-auto pr-2 custom-scrollbar space-y-2">
+                <div className="max-h-48 overflow-y-auto pr-2 custom-scrollbar space-y-3">
                     {fileState.files.map((f, i) => (
-                        <div key={i} className="bg-graphite p-3 rounded-xl border border-white/10 flex items-center gap-3">
-                            <div className="w-10 h-10 bg-petrol rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div key={i} className="glass-panel p-3 rounded-xl hover:bg-white/10 transition-colors flex items-center gap-3 group">
+                            <div className="w-10 h-10 bg-petrol-dark rounded-lg flex items-center justify-center flex-shrink-0 border border-white/5">
                                 <FileText size={20} className="text-neon" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="font-medium text-white text-sm truncate">{f.name}</p>
-                                <p className="text-[10px] text-gray-400">{(f.size / 1024).toFixed(1)} KB</p>
+                                <p className="font-bold text-white text-sm truncate">{f.name}</p>
+                                <p className="text-[10px] text-gray-400 font-mono">{(f.size / 1024).toFixed(1)} KB</p>
                             </div>
-                            <button onClick={() => removeFile(i)} className="p-1.5 hover:bg-white/10 rounded-full text-gray-400 hover:text-red-400">
+                            <button onClick={() => removeFile(i)} className="p-2 hover:bg-red-500/20 rounded-full text-gray-500 hover:text-red-500 transition-colors">
                                 <X size={16} />
                             </button>
                         </div>
@@ -202,12 +207,12 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
             </div>
 
             {/* Preview */}
-            <div className="flex-1 bg-white/5 rounded-2xl p-4 border border-white/5 overflow-hidden flex flex-col">
-              <div className="flex items-center gap-2 mb-3 text-neon">
-                <CheckCircle2 size={16} />
+            <div className="flex-1 glass-panel rounded-2xl p-5 overflow-hidden flex flex-col">
+              <div className="flex items-center gap-2 mb-4 text-neon pb-2 border-b border-white/5">
+                <CheckCircle2 size={18} />
                 <span className="text-xs font-bold uppercase tracking-wider">Pré-visualização Inteligente</span>
               </div>
-              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar mask-image-gradient">
                 <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap font-serif">
                   {fileState.previewText}
                 </p>
@@ -216,7 +221,7 @@ export const UploadView: React.FC<UploadProps> = ({ onBack, onNext }) => {
 
             <button 
               onClick={() => onNext(fileState.files, fileState.isOCR)}
-              className="mt-6 w-full bg-neon hover:bg-neon-hover text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-neon/20"
+              className="mt-6 w-full h-[56px] bg-gradient-to-r from-neon to-blue-600 hover:from-neon-hover hover:to-blue-500 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-neon/20 active:scale-[0.98] uppercase tracking-wider text-sm"
             >
               Configurar Áudio
             </button>

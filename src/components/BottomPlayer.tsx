@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, X } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { Book } from '../types';
 
 interface BottomPlayerProps {
